@@ -542,6 +542,81 @@ function formatLastActive(lastActive) {
   return active.toLocaleDateString();
 }
 
+/**
+ * Get current logged-in user's profile
+ */
+const getProfile = async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, name, email, phone, role, status, department, last_active, created_at
+       FROM users WHERE id = $1`,
+      [req.user.id]
+    );
+    if (result.rows.length === 0)
+      return res.status(404).json({ success: false, message: 'User not found.' });
+
+    res.json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ success: false, message: 'Error fetching profile.', error: error.message });
+  }
+};
+
+/**
+ * Update current logged-in user's profile
+ */
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, department, timezone, language } = req.body;
+
+    const result = await query(
+      `UPDATE users SET
+        name       = COALESCE($1, name),
+        phone      = COALESCE($2, phone),
+        department = COALESCE($3, department)
+       WHERE id = $4
+       RETURNING id, name, email, phone, role, status, department`,
+      [name, phone, department, req.user.id]
+    );
+
+    res.json({ success: true, message: 'Profile updated.', data: result.rows[0] });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ success: false, message: 'Error updating profile.', error: error.message });
+  }
+};
+
+/**
+ * Change current logged-in user's password
+ */
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword)
+      return res.status(400).json({ success: false, message: 'Both current and new password are required.' });
+
+    // Verify current password
+    const userResult = await query('SELECT password_hash FROM users WHERE id = $1', [req.user.id]);
+    if (userResult.rows.length === 0)
+      return res.status(404).json({ success: false, message: 'User not found.' });
+
+    const { comparePassword } = require('../utils/auth');
+    const valid = await comparePassword(currentPassword, userResult.rows[0].password_hash);
+    if (!valid)
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+
+    const { hashPassword } = require('../utils/auth');
+    const newHash = await hashPassword(newPassword);
+
+    await query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, req.user.id]);
+
+    res.json({ success: true, message: 'Password changed successfully.' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ success: false, message: 'Error changing password.', error: error.message });
+  }
+};
+
 module.exports = {
   getAll,
   getById,
@@ -550,5 +625,5 @@ module.exports = {
   deleteItem,
   getStats,
   updateStatus,
-  updatePermissions,
+  updatePermissions,getProfile, updateProfile, changePassword,
 };

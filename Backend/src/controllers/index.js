@@ -15,4 +15,5 @@ module.exports = {
   users: require('./usersController'),
   dashboard: require('./dashboardController'),
   reports: require('./reportsController'),
+  sites: require('./sitesController'),
 };

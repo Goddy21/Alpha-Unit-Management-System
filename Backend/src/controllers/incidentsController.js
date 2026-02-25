@@ -65,7 +65,7 @@ const getAll = async (req, res) => {
         p.employee_id AS reported_by_employee_id
       FROM incidents i
       LEFT JOIN sites s     ON i.site_id = s.id
-      LEFT JOIN personnel p ON i.reported_by_id = p.id
+      LEFT JOIN personnel p ON i.reported_by = p.id
       ${whereClause}
       ORDER BY i.${safeSortBy} ${safeSortOrder}
       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
@@ -78,7 +78,7 @@ const getAll = async (req, res) => {
       SELECT COUNT(*) AS total
       FROM incidents i
       LEFT JOIN sites s     ON i.site_id = s.id
-      LEFT JOIN personnel p ON i.reported_by_id = p.id
+      LEFT JOIN personnel p ON i.reported_by = p.id
       ${whereClause}
     `;
     const countResult = await query(countQuery, filterParams);
@@ -146,7 +146,7 @@ const getById = async (req, res) => {
         p.employee_id AS reported_by_employee_id
        FROM incidents i
        LEFT JOIN sites s     ON i.site_id = s.id
-       LEFT JOIN personnel p ON i.reported_by_id = p.id
+       LEFT JOIN personnel p ON i.reported_by = p.id
        WHERE i.id = $1`,
       [id]
     );
