@@ -3,7 +3,7 @@ const { query } = require('../config/database');
 function mapItem(i) {
   return {
     id:              i.id,
-    itemCode:        i.item_code,
+    itemCode:        i.inventory_code,
     name:            i.name,
     category:        i.category,
     serialNumber:    i.serial_number || null,
@@ -34,7 +34,7 @@ const getAll = async (req, res) => {
     if (status && status !== 'all')   { where.push(`i.status = $${idx++}`);   params.push(status); }
     if (category && category !== 'all') { where.push(`i.category = $${idx++}`); params.push(category); }
     if (search) {
-      where.push(`(i.name ILIKE $${idx} OR i.item_code ILIKE $${idx} OR i.serial_number ILIKE $${idx})`);
+      where.push(`(i.name ILIKE $${idx} OR i.inventory_code ILIKE $${idx} OR i.serial_number ILIKE $${idx})`);
       params.push(`%${search}%`); idx++;
     }
     const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
@@ -150,7 +150,7 @@ const create = async (req, res) => {
 
     const result = await query(
       `INSERT INTO inventory
-         (item_code, name, category, serial_number, quantity, status, condition,
+         (inventory_code, name, category, serial_number, quantity, status, condition,
           assigned_to, location, purchase_date, purchase_price, current_value,
           last_maintenance, next_maintenance, warranty_expiry, supplier, notes)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)

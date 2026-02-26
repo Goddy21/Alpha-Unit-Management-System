@@ -89,7 +89,7 @@ const clientsRoutes       = require('./routes/clientsRoutes');
 const personnelRoutes     = require('./routes/personnelRoutes');
 const incidentsRoutes     = require('./routes/incidentsRoutes');
 const shiftsRoutes        = require('./routes/shiftsRoutes');
-const sitesRoutes         = require('./routes/sitesRoutes');
+const sitesRoutes = require('./routes/sitesRoutes');
 const patrolRoutes        = require('./routes/patrolRoutes');
 const cctvRoutes          = require('./routes/cctvRoutes');
 const dronesRoutes        = require('./routes/dronesRoutes');
@@ -101,6 +101,7 @@ const usersRoutes         = require('./routes/usersRoutes');
 const dashboardRoutes     = require('./routes/dashboardRoutes');
 const reportsRoutes       = require('./routes/reportsRoutes');
 const settingsRoutes      = require('./routes/settingsRoutes');
+const schedulingRoutes = require('./routes/schedulingRoutes');
 
 // Apply strict limiter to auth only
 app.use(`/api/${API_VERSION}/auth`, authLimiter, authRoutes);
@@ -122,6 +123,7 @@ app.use(`/api/${API_VERSION}/users`,         usersRoutes);
 app.use(`/api/${API_VERSION}/dashboard`,     dashboardRoutes);
 app.use(`/api/${API_VERSION}/reports`,       reportsRoutes);
 app.use(`/api/${API_VERSION}/settings`,      settingsRoutes); 
+app.use(`/api/${API_VERSION}/scheduling`, schedulingRoutes);
 
 // 404 handler
 app.use((req, res) => {
