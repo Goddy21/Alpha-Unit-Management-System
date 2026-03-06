@@ -93,7 +93,7 @@ const getAll = async (req, res) => {
       siteName: i.site_name || '—',
       siteCode: i.site_code || '—',
       reportedBy: i.reported_by_name || i.reported_by || '—',
-      reportedById: i.reported_by_id,
+      reportedById: i.reported_by,
       timestamp: i.timestamp,
       severity: i.severity,
       status: i.status,
@@ -168,7 +168,7 @@ const getById = async (req, res) => {
         siteName: i.site_name || '—',
         siteCode: i.site_code || '—',
         reportedBy: i.reported_by_name || i.reported_by || '—',
-        reportedById: i.reported_by_id,
+        reportedById: i.reported_by,
         timestamp: i.timestamp,
         severity: i.severity,
         status: i.status,
@@ -221,8 +221,8 @@ const create = async (req, res) => {
 
     const result = await query(
       `INSERT INTO incidents
-         (incident_code, title, description, site_id, reported_by_id, severity, status,
-          category, location, gps_coords, assigned_to, timestamp, attachment_count)
+      (incident_code, title, description, site_id, reported_by, severity, status,
+        category, location, gps_coords, assigned_to, timestamp, attachment_count)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), 0)
        RETURNING *`,
       [

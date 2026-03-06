@@ -5,7 +5,9 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+
 const app = express();
+
 
 // ==================== MIDDLEWARE ====================
 
@@ -102,6 +104,7 @@ const dashboardRoutes     = require('./routes/dashboardRoutes');
 const reportsRoutes       = require('./routes/reportsRoutes');
 const settingsRoutes      = require('./routes/settingsRoutes');
 const schedulingRoutes = require('./routes/schedulingRoutes');
+const eventsRoutes = require('./routes/eventsRoutes');
 
 // Apply strict limiter to auth only
 app.use(`/api/${API_VERSION}/auth`, authLimiter, authRoutes);
@@ -124,6 +127,7 @@ app.use(`/api/${API_VERSION}/dashboard`,     dashboardRoutes);
 app.use(`/api/${API_VERSION}/reports`,       reportsRoutes);
 app.use(`/api/${API_VERSION}/settings`,      settingsRoutes); 
 app.use(`/api/${API_VERSION}/scheduling`, schedulingRoutes);
+app.use(`/api/${API_VERSION}/events`, eventsRoutes);
 
 // 404 handler
 app.use((req, res) => {
