@@ -105,6 +105,7 @@ const reportsRoutes       = require('./routes/reportsRoutes');
 const settingsRoutes      = require('./routes/settingsRoutes');
 const schedulingRoutes = require('./routes/schedulingRoutes');
 const eventsRoutes = require('./routes/eventsRoutes');
+const leaveRoutes = require('./routes/leaveRoutes');
 
 // Apply strict limiter to auth only
 app.use(`/api/${API_VERSION}/auth`, authLimiter, authRoutes);
@@ -128,6 +129,7 @@ app.use(`/api/${API_VERSION}/reports`,       reportsRoutes);
 app.use(`/api/${API_VERSION}/settings`,      settingsRoutes); 
 app.use(`/api/${API_VERSION}/scheduling`, schedulingRoutes);
 app.use(`/api/${API_VERSION}/events`, eventsRoutes);
+app.use(`/api/${API_VERSION}/leave`, leaveRoutes);
 
 // 404 handler
 app.use((req, res) => {
